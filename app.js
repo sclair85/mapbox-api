@@ -14,18 +14,18 @@ const error = () => {
 }
 
 const currentLocationMarker = (map, longitude, latitude) => {
-  console.log(map);
+  
   const marker1 = new mapboxgl.Marker()
   .setLngLat([longitude, latitude])
   .addTo(map);
-  console.log(marker1);
+  
 }
 
 const mapCurrentLocation = () => {
   
   const lat = document.querySelector('.lat').innerHTML;
   const lon = document.querySelector('.lon').innerHTML;
-  console.log(lat, lon)
+  
   mapboxgl.accessToken = 'pk.eyJ1IjoibWF5dXJwYXRlbDc4NjQ1IiwiYSI6ImNrcDVrYjh0cjF5azAyb3RhbjBnOWN6ajIifQ.MS0bHsUsb-hMZ1dABPcqHQ';
   const map = new mapboxgl.Map({
     container: 'map',
@@ -50,7 +50,7 @@ const mapSearch = async (userQuery) => {
   const lon = (document.querySelector('.lon').innerHTML);
   const lat = (document.querySelector('.lat').innerHTML);
   
-  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${userQuery}.json?proximity=${[lon, lat]}&access_token=pk.eyJ1IjoibWF5dXJwYXRlbDc4NjQ1IiwiYSI6ImNrcDVrYjh0cjF5azAyb3RhbjBnOWN6ajIifQ.MS0bHsUsb-hMZ1dABPcqHQ`
+  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${userQuery}.json?limit=10&proximity=${[lon, lat]}&access_token=pk.eyJ1IjoibWF5dXJwYXRlbDc4NjQ1IiwiYSI6ImNrcDVrYjh0cjF5azAyb3RhbjBnOWN6ajIifQ.MS0bHsUsb-hMZ1dABPcqHQ`
   
   const userSearch = await fetch(url)
   const response = await userSearch.json()
@@ -61,14 +61,27 @@ const mapSearch = async (userQuery) => {
 
 const calculateDistance = (lon, lat, response) => {
   console.log(response)
+  console.log(response.features)
+  const poiObject = {}
+  const poiArr = [];
+  
   response.features.forEach( poi => {
     const poiLon = poi.geometry.coordinates[0];
     const poiLat = poi.geometry.coordinates[1];
-    console.log(poiLon)
-    console.log(poiLat)
+    const distance = (turf.distance([poiLon,poiLat], [lon,lat],{units:'kilometers'} )).toFixed(2)
+    // console.log(distance)
+    // console.log(poi.text)
+    // console.log(poi.properties.address)
+    poiObject.name = poi.text;
+    poiObject.address = poi.properties.address;
+    poiObject.distance = distance;
+    // console.log(poiObject)
+    poiArr.push(poiObject)
+    console.log(poiArr)
+
   })
-  const poi = [];
-  const current = [lon, lat];
+  
+
 
 }
 
