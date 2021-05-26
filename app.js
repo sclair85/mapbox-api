@@ -49,14 +49,27 @@ const mapCurrentLocation = () => {
 const mapSearch = async (userQuery) => {
   const lon = (document.querySelector('.lon').innerHTML);
   const lat = (document.querySelector('.lat').innerHTML);
-  console.log(userQuery)
+  
   const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${userQuery}.json?proximity=${[lon, lat]}&access_token=pk.eyJ1IjoibWF5dXJwYXRlbDc4NjQ1IiwiYSI6ImNrcDVrYjh0cjF5azAyb3RhbjBnOWN6ajIifQ.MS0bHsUsb-hMZ1dABPcqHQ`
-  console.log(url)
+  
   const userSearch = await fetch(url)
   const response = await userSearch.json()
+  
+  
+  calculateDistance(lon, lat, response)
+}
+
+const calculateDistance = (lon, lat, response) => {
   console.log(response)
-  //response 
-  //pass response to render
+  response.features.forEach( poi => {
+    const poiLon = poi.geometry.coordinates[0];
+    const poiLat = poi.geometry.coordinates[1];
+    console.log(poiLon)
+    console.log(poiLat)
+  })
+  const poi = [];
+  const current = [lon, lat];
+
 }
 
 
